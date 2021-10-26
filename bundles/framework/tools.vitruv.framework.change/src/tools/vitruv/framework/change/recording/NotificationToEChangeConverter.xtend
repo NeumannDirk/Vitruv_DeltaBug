@@ -195,6 +195,10 @@ package final class NotificationToEChangeConverter {
 	}
 
 	private def Iterable<? extends EChange> handleInsertReference(extension NotificationInfo notification) {
+//		val int my_position = position
+//		if(0 !== 1){
+//			my_position = -1	
+//		}
 		createInsertReferenceChange(notifierModelElement, reference, newModelElementValue, position).
 			surroundWithCreateAndFeatureChangesIfNecessary()
 	}

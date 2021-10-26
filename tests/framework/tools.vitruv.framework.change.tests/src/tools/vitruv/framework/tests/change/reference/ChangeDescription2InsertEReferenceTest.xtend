@@ -1,25 +1,17 @@
 package tools.vitruv.framework.tests.change.reference
 
+import allElementTypes.Root
+import java.util.ArrayList
+import java.util.List
+import org.junit.jupiter.api.Test
+import tools.vitruv.framework.change.echange.EChange
+import tools.vitruv.framework.tests.change.ChangeDescription2ChangeTransformationTest
+
 import static allElementTypes.AllElementTypesPackage.Literals.*
+import static tools.vitruv.testutils.metamodels.AllElementTypesCreators.*
 
 import static extension tools.vitruv.framework.tests.change.util.AtomicEChangeAssertHelper.*
 import static extension tools.vitruv.framework.tests.change.util.CompoundEChangeAssertHelper.*
-import org.junit.jupiter.api.Test
-import static extension tools.vitruv.testutils.metamodels.AllElementTypesCreators.*
-import tools.vitruv.framework.tests.change.ChangeDescription2ChangeTransformationTest
-import allElementTypes.Root
-import java.util.List
-import tools.vitruv.framework.change.echange.EChange
-
-
-import static org.hamcrest.CoreMatchers.*
-import static org.hamcrest.MatcherAssert.assertThat
-//import static org.junit.jupiter.api.Assertions.assertEquals
-import static tools.vitruv.testutils.matchers.ModelMatchers.*
-import org.eclipse.emf.common.util.BasicEList
-import java.util.ArrayList
-import static org.junit.Assert.assertEquals
-import tools.vitruv.framework.change.description.TransactionalChange
 
 class ChangeDescription2InsertEReferenceTest extends ChangeDescription2ChangeTransformationTest {
 
@@ -46,12 +38,15 @@ class ChangeDescription2InsertEReferenceTest extends ChangeDescription2ChangeTra
 	def void minusEins_3OhneLoeschen() {
 		val Root upr = getUniquePersistedRoot()
 		val nonRoot1 = aet.NonRoot()
+		nonRoot1.id = 1.toString()
 		val nonRoot2 = aet.NonRoot()
-		val nonRoot3 = aet.NonRoot()		
+		nonRoot2.id = 2.toString()
+		val nonRoot3 = aet.NonRoot()
+		nonRoot3.id = 3.toString()
 		upr => [
 			multiValuedContainmentEReference.add(0, nonRoot1)
-			multiValuedContainmentEReference.add(1, nonRoot2)
-			multiValuedContainmentEReference.add(2, nonRoot3)
+			multiValuedContainmentEReference.add(0, nonRoot2)
+			multiValuedContainmentEReference.add(0, nonRoot3)
 		]		
 		val List<EChange> result = upr.record [
 			multiValuedNonContainmentEReference.add(0, nonRoot1)

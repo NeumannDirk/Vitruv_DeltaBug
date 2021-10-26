@@ -29,6 +29,7 @@ import tools.vitruv.framework.change.echange.feature.UnsetFeature
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.util.EcoreUtil
 import static com.google.common.base.Preconditions.checkArgument
+import org.eclipse.emf.common.util.EList
 
 /**
  * Factory singleton class for elements of change models.
@@ -208,11 +209,22 @@ class TypeInferringAtomicEChangeFactory {
 	 * @return The created InsertEReference EChange.
 	 */
 	def <A extends EObject, T extends EObject> InsertEReference<A, T> createInsertReferenceChange(A affectedEObject,
-		EReference affectedReference, T newValue, int index) {
+		EReference affectedReference, T newValue, int index) {			
 		val c = ReferenceFactory.eINSTANCE.createInsertEReference()
 		setFeatureChangeFeatures(c, affectedEObject, affectedReference)
 		setNewValue(c, newValue)
-		c.index = index
+		/* If the new value was just inserted and especially at the last position,
+		 * then the index can be changed to -1.
+		 */
+		var int newIndex = index;
+		try {
+			var eRef = affectedEObject.eGet(affectedReference) as EList<EObject>
+			if(eRef.contains(newValue) && (eRef.indexOf(newValue) == (eRef.size()-1)) && (index == (eRef.size()-1))){
+				newIndex = -1;
+			}
+		}
+		catch(Throwable e){}
+		c.index = newIndex;	
 		return c
 	}
 
