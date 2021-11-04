@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EAttribute
 import org.eclipse.emf.common.util.URI
 import tools.vitruv.framework.change.echange.feature.reference.UpdateReferenceEChange
 import static extension tools.vitruv.framework.change.recording.EChangeCreationUtil.*
+import org.eclipse.emf.common.util.EList
 
 /** 
  * Converts an EMF notification to an {@link EChange}.
@@ -58,6 +59,7 @@ package final class NotificationToEChangeConverter {
 					case SET: handleSetReference(notification)
 					case UNSET: handleUnsetReference(notification)
 					case ADD: handleInsertReference(notification)
+					//hier auch minus eins
 					case ADD_MANY: handleMultiInsertReference(notification)
 					case REMOVE: handleRemoveReference(notification)
 					case REMOVE_MANY: handleMultiRemoveReference(notification)
@@ -195,19 +197,46 @@ package final class NotificationToEChangeConverter {
 	}
 
 	private def Iterable<? extends EChange> handleInsertReference(extension NotificationInfo notification) {
-//		val int my_position = position
-//		if(0 !== 1){
-//			my_position = -1	
-//		}
-		createInsertReferenceChange(notifierModelElement, reference, newModelElementValue, position).
+		/* If the new value was just inserted and especially at the last position,
+		 * then the index can be changed to -1.
+		 */
+		var int newIndex = position;
+		var eRef = notifierModelElement.eGet(reference) as EList<EObject>
+		if(eRef.contains(newModelElementValue) && (eRef.indexOf(newModelElementValue) == (eRef.size()-1)) && (position == (eRef.size()-1))){
+			newIndex = -1;
+		}
+		createInsertReferenceChange(notifierModelElement, reference, newModelElementValue, newIndex).
 			surroundWithCreateAndFeatureChangesIfNecessary()
 	}
 
 	private def Iterable<? extends EChange> handleMultiInsertReference(extension NotificationInfo notification) {
-		(newValue as List<EObject>).flatMapFixedIndexed [ index, value |
-			createInsertReferenceChange(notifierModelElement, reference, value, initialIndex + index).
-				surroundWithCreateAndFeatureChangesIfNecessary()
+		//hier auch minus eins
+		val eRef = notifierModelElement.eGet(reference) as EList<EObject>;
+		val int eRefAfterInsertionSize = eRef.size;
+		val List<EObject> newValues = (newValue as List<EObject>);
+		val int numOfNewValues = newValues.size;
+		val int myInitialIndex = initialIndex;		
+		
+		val boolean t = true;
+		newValues.forEach[value, index |
+			print(eRef.indexOf(value) == eRefAfterInsertionSize - numOfNewValues + index)  				
 		]
+		
+		val int z = 0; 
+		
+		//exm: insert (A,B,C) at 2 in (X,Y) -> (X,Y,A,B,C); 2 == 5(afterInsertionSize) - 3(numNewVal);  
+		if(myInitialIndex == eRefAfterInsertionSize - numOfNewValues){
+			newValues.flatMapFixedIndexed [ index, value |
+				createInsertReferenceChange(notifierModelElement, reference, value, -1).
+					surroundWithCreateAndFeatureChangesIfNecessary()
+			]			
+		}
+		else{
+			newValues.flatMapFixedIndexed [ index, value |
+				createInsertReferenceChange(notifierModelElement, reference, value, initialIndex + index).
+					surroundWithCreateAndFeatureChangesIfNecessary()
+			]
+		}
 	}
 
 	private def handleInsertRootChange(extension NotificationInfo notification) {
