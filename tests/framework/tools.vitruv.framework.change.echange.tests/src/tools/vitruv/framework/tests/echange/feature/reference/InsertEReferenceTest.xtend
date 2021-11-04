@@ -33,7 +33,7 @@ class InsertEReferenceTest extends ReferenceEChangeTest {
 	 * is in the resource already.
 	 */
 	@Test
-	def void minusEins_resolveBeforeNonContainmentTest() {
+	def void resolveBeforeNonContainmentTest_insertAtMinusOne() {
 		// Set state before
 		isNonContainmentTest
 
@@ -53,7 +53,7 @@ class InsertEReferenceTest extends ReferenceEChangeTest {
 	 * is in the staging area.
 	 */
 	@Test
-	def void minusEins_resolveBeforeContainmentTest() {
+	def void resolveBeforeContainmentTest_insertAtMinusOne() {
 		// Set state before
 		isContainmentTest
 
@@ -71,7 +71,7 @@ class InsertEReferenceTest extends ReferenceEChangeTest {
 	 * returns the same class.
 	 */
 	@Test
-	def void minusEins_resolveToCorrectType() {
+	def void resolveToCorrectType_insertAtMinusOne() {
 		// Set state before
 		isNonContainmentTest
 
@@ -90,7 +90,7 @@ class InsertEReferenceTest extends ReferenceEChangeTest {
 	 * new value is already in the resource.
 	 */
 	@Test
-	def void minusEins_applyForwardNonContainmentTest() {
+	def void applyForwardNonContainmentTest_insertAtMinusOne() {
 		// Set state before
 		isNonContainmentTest
 
@@ -119,7 +119,7 @@ class InsertEReferenceTest extends ReferenceEChangeTest {
 	 * new value is from the staging area.
 	 */
 	@Test
-	def void minusEins_applyForwardContainmentTest() {
+	def void applyForwardContainmentTest_insertAtMinusOne() {
 		// Set state before
 		isContainmentTest
 
@@ -149,7 +149,7 @@ class InsertEReferenceTest extends ReferenceEChangeTest {
 	 * removed values are already in the resource.
 	 */
 	@Test
-	def void minusEins_applyBackwardNonContainmentTest() {
+	def void applyBackwardNonContainmentTest_insertAtMinusOne() {
 		// Set state before
 		isNonContainmentTest
 
@@ -184,7 +184,7 @@ class InsertEReferenceTest extends ReferenceEChangeTest {
 	 * removed values will be placed in the staging area after removing them.
 	 */
 	@Test
-	def void minusEins_applyBackwardContainmentTest() {
+	def void applyBackwardContainmentTest_insertAtMinusOne() {
 		// Set state before
 		isContainmentTest
 
